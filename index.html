@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Card Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Library Card Manager</h1>
+        
+        <div class="add-book-form">
+            <input type="text" id="bookTitle" placeholder="書籍タイトル">
+            <input type="text" id="bookAuthor" placeholder="著者名">
+            <input type="date" id="dueDate" placeholder="返却期限">
+            <button id="addBook">貸出登録</button>
+        </div>
+
+        <div class="books-container">
+            <h2>貸出中の本</h2>
+            <div id="booksList"></div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

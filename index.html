@@ -3,24 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Card Manager</title>
+    <meta name="description" content="シンプルで使いやすい図書館貸出管理システム。本の貸出・返却を効率的に管理できます。">
+    <meta name="keywords" content="図書館, 貸出管理, 書籍管理, library, book management">
+    <meta name="author" content="Library Card Manager">
+    <title>Library Card Manager - 図書館貸出管理システム</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>📚 Library Card Manager</h1>
+        <header>
+            <h1>📚 Library Card Manager</h1>
+            <p class="subtitle">図書館貸出管理システム</p>
+        </header>
         
-        <div class="add-book-form">
-            <input type="text" id="bookTitle" placeholder="書籍タイトル">
-            <input type="text" id="bookAuthor" placeholder="著者名">
-            <input type="date" id="dueDate" placeholder="返却期限">
-            <button id="addBook">貸出登録</button>
-        </div>
+        <main>
+            <section class="add-book-section">
+                <h2>新しい貸出登録</h2>
+                <form class="add-book-form" aria-label="本の貸出登録フォーム">
+                    <div class="form-group">
+                        <label for="bookTitle">書籍タイトル</label>
+                        <input type="text" 
+                               id="bookTitle" 
+                               placeholder="書籍タイトルを入力してください" 
+                               required
+                               aria-describedby="title-help">
+                        <small id="title-help" class="form-help">貸出する本のタイトルを入力してください</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bookAuthor">著者名</label>
+                        <input type="text" 
+                               id="bookAuthor" 
+                               placeholder="著者名を入力してください" 
+                               required
+                               aria-describedby="author-help">
+                        <small id="author-help" class="form-help">本の著者名を入力してください</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dueDate">返却期限</label>
+                        <input type="date" 
+                               id="dueDate" 
+                               required
+                               aria-describedby="date-help">
+                        <small id="date-help" class="form-help">本を返却する予定日を選択してください</small>
+                    </div>
+                    
+                    <button type="button" id="addBook" class="primary-btn">
+                        📖 貸出登録
+                    </button>
+                </form>
+            </section>
 
-        <div class="books-container">
-            <h2>貸出中の本</h2>
-            <div id="booksList"></div>
-        </div>
+            <section class="books-section">
+                <h2>貸出中の本一覧</h2>
+                <div id="booksList" role="list" aria-label="貸出中の本のリスト"></div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Library Card Manager. Built with ❤️ for efficient library management.</p>
+        </footer>
     </div>
     <script src="app.js"></script>
 </body>

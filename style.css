@@ -1,100 +1,350 @@
+/* ========================================
+   CSS Variables and Root Styles
+   ======================================== */
 :root {
     --primary-color: #2c3e50;
     --secondary-color: #3498db;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
     --background-color: #f5f6fa;
     --card-color: #ffffff;
     --text-color: #2c3e50;
+    --text-muted: #666;
+    --border-color: #ddd;
+    --shadow: 0 2px 4px rgba(0,0,0,0.1);
+    --shadow-hover: 0 4px 8px rgba(0,0,0,0.15);
+    --border-radius: 8px;
+    --transition: all 0.3s ease;
 }
 
+/* ========================================
+   Reset and Base Styles
+   ======================================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+*:focus {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background-color: var(--background-color);
     color: var(--text-color);
     line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/* ========================================
+   Layout Components
+   ======================================== */
 .container {
     max-width: 800px;
-    margin: 2rem auto;
-    padding: 0 1rem;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    flex-grow: 1;
 }
 
-h1 {
+header {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+footer {
+    margin-top: 3rem;
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ========================================
+   Typography
+   ======================================== */
+h1 {
     color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+/* ========================================
+   Form Styles
+   ======================================== */
+.add-book-section {
+    background: var(--card-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.add-book-section:hover {
+    box-shadow: var(--shadow-hover);
 }
 
 .add-book-form {
     display: grid;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    background: var(--card-color);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    gap: 1.5rem;
 }
 
-input, button {
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+input {
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
     font-size: 1rem;
+    transition: var(--transition);
 }
 
+input:focus {
+    border-color: var(--secondary-color);
+}
+
+input:invalid {
+    border-color: var(--danger-color);
+}
+
+.form-help {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* ========================================
+   Button Styles
+   ======================================== */
 button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.primary-btn {
     background-color: var(--secondary-color);
     color: white;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-button:hover {
+.primary-btn:hover {
     background-color: #2980b9;
+    transform: translateY(-1px);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.return-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--danger-color);
+    color: white;
+    font-size: 0.9rem;
+}
+
+.return-btn:hover {
+    background-color: #c0392b;
+}
+
+/* ========================================
+   Book Card Styles
+   ======================================== */
+.books-section {
+    min-height: 200px;
 }
 
 .book-card {
     background: var(--card-color);
-    padding: 1rem;
+    padding: 1.5rem;
     margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: var(--transition);
+    border-left: 4px solid var(--secondary-color);
+}
+
+.book-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.book-card.overdue {
+    border-left-color: var(--danger-color);
+    background-color: #ffeaea;
 }
 
 .book-info {
     flex-grow: 1;
+    margin-right: 1rem;
 }
 
 .book-title {
-    font-weight: bold;
+    font-weight: 700;
     color: var(--primary-color);
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .book-author {
-    color: #666;
+    color: var(--text-muted);
     font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .due-date {
     color: var(--secondary-color);
     font-size: 0.9rem;
+    font-weight: 500;
 }
 
-.return-btn {
-    padding: 0.5rem 1rem;
-    background-color: #e74c3c;
+.due-date.overdue-text {
+    color: var(--danger-color);
+    font-weight: 600;
 }
 
-.return-btn:hover {
-    background-color: #c0392b;
+.no-books {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 2rem;
+    background: var(--card-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem 0.5rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .add-book-section {
+        padding: 1.5rem;
+    }
+    
+    .book-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+    }
+    
+    .book-info {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .return-btn {
+        align-self: flex-end;
+        width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .add-book-section {
+        padding: 1rem;
+    }
+    
+    input, button {
+        font-size: 16px; /* Prevents zoom on mobile */
+    }
+}
+
+/* ========================================
+   Accessibility Enhancements
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #000;
+        --shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+}
+
+/* ========================================
+   Print Styles
+   ======================================== */
+@media print {
+    .add-book-section,
+    .return-btn {
+        display: none;
+    }
+    
+    .book-card {
+        box-shadow: none;
+        border: 1px solid #000;
+        break-inside: avoid;
+    }
+    
+    body {
+        background: white;
+        color: black;
+    }
 }

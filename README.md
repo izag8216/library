@@ -1,60 +1,60 @@
 # Library Card Manager 📚
 
-シンプルでモダンな図書館貸し出し管理システムです。HTMLとCSSとJavaScriptで実装された、使いやすいウェブアプリケーションです。
+A simple and modern library lending management system. This is an easy-to-use web application built with HTML, CSS, and JavaScript.
 
-## 特徴 ✨
+## Features ✨
 
-- 📱 レスポンシブデザイン対応
-- 🎨 モダンでミニマルなUI
-- 💾 ローカルストレージによるデータ永続化
-- ⚡ 軽量で高速な動作
-- 📅 返却期限管理機能
-- 🚨 期限切れの視覚的アラート
+- 📱 Responsive design
+- 🎨 Modern and minimal UI
+- 💾 Data persistence with LocalStorage
+- ⚡ Lightweight and fast performance
+- 📅 Due date management
+- 🚨 Visual alerts for overdue books
 
-## 使い方 🚀
+## How to Use 🚀
 
-1. 本を貸し出す
-   - 「書籍タイトル」を入力
-   - 「著者名」を入力
-   - 「返却期限」を選択
-   - 「貸出登録」ボタンをクリック
+1. Lend a Book
+   - Enter the "Book Title"
+   - Enter the "Author Name"
+   - Select the "Due Date"
+   - Click the "Lend" button
 
-2. 本を返却する
-   - 対象の本の「返却」ボタンをクリック
+2. Return a Book
+   - Click the "Return" button for the corresponding book
 
-3. 貸出状況の確認
-   - 画面下部に貸出中の本が一覧表示
-   - 返却期限切れの本は赤色で表示
+3. Check Lending Status
+   - All currently lent books are listed at the bottom of the screen
+   - Overdue books are highlighted in red
 
-## ファイル構成 📁
+## File Structure 📁
 
-- `index.html` - アプリケーションのメインHTML
-- `style.css` - スタイルシート
-- `app.js` - アプリケーションのロジック
+- `index.html` - Main HTML of the application
+- `style.css` - Stylesheet
+- `app.js` - Application logic
 
-## 技術仕様 🔧
+## Technical Specifications 🔧
 
-- プログラミング言語: JavaScript
-- マークアップ: HTML5
-- スタイリング: CSS3
-- データストレージ: LocalStorage API
+- Programming Language: JavaScript
+- Markup: HTML5
+- Styling: CSS3
+- Data Storage: LocalStorage API
 
-## 動作環境 🌐
+## Supported Browsers 🌐
 
-以下のモダンブラウザで動作確認済み:
+Tested on the following modern browsers:
 - Google Chrome
 - Mozilla Firefox
 - Safari
 - Microsoft Edge
 
-## ライセンス 📄
+## License 📄
 
 MIT License
 
-## 作者 👤
+## Author 👤
 
 Created with ❤️ by [Your Name]
 
 ---
 
-お問い合わせやご要望は、Issues機能をご利用ください。
+For inquiries or requests, please use the Issues feature.

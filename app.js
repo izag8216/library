@@ -1,35 +1,51 @@
 /**
  * Library Management System
- * Manages book lending and returns with localStorage persistence
+ * Manages book lending and returns with SQLite database
  */
 class LibraryManager {
-    static STORAGE_KEY = 'books';
+    static API_BASE_URL = '/api';
     static MESSAGES = {
         REQUIRED_FIELDS: 'すべての項目を入力してください',
         INVALID_DATE: '有効な返却期限を入力してください',
-        RETURN_CONFIRM: '本当にこの本を返却しますか？'
+        RETURN_CONFIRM: '本当にこの本を返却しますか？',
+        NETWORK_ERROR: 'ネットワークエラーが発生しました',
+        SERVER_ERROR: 'サーバーエラーが発生しました'
     };
 
     /**
      * Initialize the LibraryManager instance
      */
     constructor() {
-        this.books = this.loadBooksFromStorage();
+        this.books = [];
         this.initializeUI();
         this.loadBooks();
     }
 
     /**
-     * Load books from localStorage with error handling
-     * @returns {Array} Array of book objects
+     * Make API request with error handling
+     * @param {string} url - API endpoint
+     * @param {Object} options - Fetch options
+     * @returns {Promise} API response
      */
-    loadBooksFromStorage() {
+    async apiRequest(url, options = {}) {
         try {
-            const stored = localStorage.getItem(LibraryManager.STORAGE_KEY);
-            return stored ? JSON.parse(stored) : [];
+            const response = await fetch(`${LibraryManager.API_BASE_URL}${url}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.error || `HTTP ${response.status}`);
+            }
+
+            return await response.json();
         } catch (error) {
-            console.warn('Failed to load books from storage:', error);
-            return [];
+            console.error('API request failed:', error);
+            throw error;
         }
     }
 
@@ -60,7 +76,7 @@ class LibraryManager {
     /**
      * Validate and add a new book to the library
      */
-    addBook() {
+    async addBook() {
         const title = document.getElementById('bookTitle')?.value?.trim();
         const author = document.getElementById('bookAuthor')?.value?.trim();
         const dueDate = document.getElementById('dueDate')?.value;
@@ -69,21 +85,28 @@ class LibraryManager {
             return;
         }
 
-        const book = {
-            id: this.generateBookId(),
-            title,
-            author,
-            dueDate,
-            borrowedDate: new Date().toISOString()
-        };
+        try {
+            const addButton = document.getElementById('addBook');
+            addButton.disabled = true;
+            addButton.textContent = '登録中...';
 
-        this.books.push(book);
-        this.saveBooks();
-        this.loadBooks();
-        this.clearForm();
-        
-        // Focus back to title input for easy continuous entry
-        document.getElementById('bookTitle')?.focus();
+            const response = await this.apiRequest('/books', {
+                method: 'POST',
+                body: JSON.stringify({ title, author, dueDate })
+            });
+
+            if (response.success) {
+                await this.loadBooks();
+                this.clearForm();
+                document.getElementById('bookTitle')?.focus();
+            }
+        } catch (error) {
+            alert(`本の登録に失敗しました: ${error.message}`);
+        } finally {
+            const addButton = document.getElementById('addBook');
+            addButton.disabled = false;
+            addButton.textContent = '📖 貸出登録';
+        }
     }
 
     /**
@@ -179,48 +202,57 @@ class LibraryManager {
      * Return a book with confirmation
      * @param {number} id - Book ID
      */
-    returnBook(id) {
+    async returnBook(id) {
         const book = this.books.find(b => b.id === id);
         if (!book) return;
 
         if (confirm(`${book.title} を返却しますか？`)) {
-            this.books = this.books.filter(book => book.id !== id);
-            this.saveBooks();
-            this.loadBooks();
+            try {
+                const response = await this.apiRequest(`/books/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.success) {
+                    await this.loadBooks();
+                }
+            } catch (error) {
+                alert(`本の返却に失敗しました: ${error.message}`);
+            }
         }
     }
 
     /**
      * Load and display all books
      */
-    loadBooks() {
+    async loadBooks() {
         if (!this.booksList) return;
 
-        this.booksList.innerHTML = '';
-        
-        if (this.books.length === 0) {
-            this.booksList.innerHTML = '<p class="no-books">貸出中の本はありません</p>';
-            return;
-        }
-
-        const sortedBooks = this.books.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
-        
-        sortedBooks.forEach(book => {
-            this.booksList.appendChild(this.createBookCard(book));
-        });
-    }
-
-    /**
-     * Save books to localStorage with error handling
-     */
-    saveBooks() {
         try {
-            localStorage.setItem(LibraryManager.STORAGE_KEY, JSON.stringify(this.books));
+            this.booksList.innerHTML = '<p class="no-books">読み込み中...</p>';
+            
+            const response = await this.apiRequest('/books');
+            
+            if (response.success) {
+                this.books = response.data;
+                this.booksList.innerHTML = '';
+                
+                if (this.books.length === 0) {
+                    this.booksList.innerHTML = '<p class="no-books">貸出中の本はありません</p>';
+                    return;
+                }
+
+                const sortedBooks = this.books.sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+                
+                sortedBooks.forEach(book => {
+                    this.booksList.appendChild(this.createBookCard(book));
+                });
+            }
         } catch (error) {
-            console.error('Failed to save books to storage:', error);
-            alert('データの保存に失敗しました');
+            this.booksList.innerHTML = '<p class="no-books">データの読み込みに失敗しました</p>';
+            console.error('Failed to load books:', error);
         }
     }
+
 
     /**
      * Clear the book input form
@@ -236,19 +268,16 @@ class LibraryManager {
 
     /**
      * Get statistics about the library
-     * @returns {Object} Library statistics
+     * @returns {Promise<Object>} Library statistics
      */
-    getStatistics() {
-        const totalBooks = this.books.length;
-        const overdueBooks = this.books.filter(book => 
-            new Date(book.dueDate) < new Date()
-        ).length;
-        
-        return {
-            total: totalBooks,
-            overdue: overdueBooks,
-            onTime: totalBooks - overdueBooks
-        };
+    async getStatistics() {
+        try {
+            const response = await this.apiRequest('/statistics');
+            return response.success ? response.data : null;
+        } catch (error) {
+            console.error('Failed to load statistics:', error);
+            return null;
+        }
     }
 }
 
